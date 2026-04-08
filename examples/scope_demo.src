@@ -1,0 +1,25 @@
+/*
+  Demo focus:
+  - nested scopes
+  - declaration/use links in annotated AST
+  - same identifier name in different scopes
+*/
+
+int result;
+
+int main() {
+    int x;
+    x = 2;
+
+    {
+        int x;
+        x = 5;
+        result = x;
+    }
+
+    if (result > 3) {
+        x = x + 1;
+    }
+
+    return x;
+}

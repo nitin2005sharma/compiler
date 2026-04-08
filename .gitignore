@@ -1,0 +1,49 @@
+# Build directories
+/build/
+/build-*/
+
+# In-source CMake / test artifacts
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/CTestTestfile.cmake
+/Testing/
+/compile_commands.json
+/Makefile
+
+# In-source Visual Studio / MSBuild artifacts
+/.vs/
+/Debug/
+/Release/
+/x64/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcproj
+*.user
+*.suo
+*.VC.db
+*.ilk
+*.idb
+*.obj
+*.o
+*.pdb
+*.exp
+*.lib
+*.dll
+*.exe
+
+# Generated compiler outputs written to the repo root
+/*_ast.dot
+/*_ast.png
+/*_annotated_ast.dot
+/*_annotated_ast.png
+/*_cfg.dot
+/*_cfg.png
+/*_ir.txt
+/*_summary.txt
+/run_output.txt
+
+# Local tool metadata
+/.qodo/

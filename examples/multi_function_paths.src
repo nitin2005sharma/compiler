@@ -1,0 +1,28 @@
+/*
+  Demo focus:
+  - multiple functions
+  - if/else returns
+  - call graph edges in CFG
+*/
+
+int max2(int left, int right) {
+    if (left > right) {
+        return left;
+    } else {
+        return right;
+    }
+}
+
+int clamp_low(int value, int low) {
+    if (value < low) {
+        return low;
+    }
+
+    return value;
+}
+
+int main() {
+    int picked;
+    picked = max2(3, 7);
+    return clamp_low(picked, 5);
+}

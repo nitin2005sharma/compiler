@@ -1,0 +1,13 @@
+int add(int left, int right) {
+    return left + right;
+}
+
+int twice(int value) {
+    return add(value, value);
+}
+
+int main() {
+    int x;
+    x = twice(5);
+    return add(x, 1);
+}

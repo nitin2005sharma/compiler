@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Compiler Workbench</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero">
+            <div>
+                <p class="eyebrow"></p>
+                <h1> code optimizaion</h1>
+              
+            </div>
+              
+        </header>
+
+        <main class="workspace">
+            <section class="panel editor-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Source Program</h2>
+                        <p>Load an example or type directly in the editor.</p>
+                    </div>
+                    <div class="controls">
+                        <select id = "sampleSelect"  aria-label="Example programs">
+                            <option selected disabled>Loading samples...</option>
+                        </select>
+                        <label class="toggle">
+                            <input id="traceToggle" type="checkbox" checked>
+                            <span>Trace all phases</span>
+                        </label>
+                        <button id="runButton" class="run-button">Run Compiler</button>
+                    </div>
+                </div>
+                <textarea id="sourceEditor" spellcheck="false"></textarea>
+            </section>
+
+            <section class="panel results-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Compiler Output</h2>
+                       
+                    </div>
+                    <div id="statusPill" class="status-pill idle">Ready</div>
+                </div>
+
+                <div id="summaryCards" class="summary-grid"></div>
+
+                <section class="trace-panel">
+                 
+                    <div id="phaseTrace" class="phase-grid"></div>
+                </section>
+
+                <section class="tab-panel">
+                    <div id="tabButtons" class="tab-buttons"></div>
+                    <div class="tab-body">
+                        <div id="graphContent" class="graph-view"></div>
+                        <pre id="tabContent" class="output-view"></pre>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+</body>
+</html>

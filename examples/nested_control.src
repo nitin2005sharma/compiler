@@ -1,0 +1,27 @@
+/*
+  Demo focus:
+  - nested if + while
+  - branch edges and loop-back edges in CFG
+  - relational ops and assignments in IR
+*/
+
+int total;
+
+int main() {
+    int a;
+    int limit;
+
+    a = 1;
+    limit = 4;
+
+    if (limit > a) {
+        while (a < limit) {
+            a = a + 1;
+        }
+        total = a;
+    } else {
+        total = limit;
+    }
+
+    return total;
+}

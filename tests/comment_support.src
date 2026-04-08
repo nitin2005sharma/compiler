@@ -1,0 +1,11 @@
+// Global value used by main.
+/* The lexer should ignore
+   block comments too. */
+int value;
+
+int main() {
+    int a;
+    a = 1;
+    value = a + 2; // Inline comments should work.
+    return value;
+}

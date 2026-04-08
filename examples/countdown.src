@@ -1,0 +1,18 @@
+/*
+  Demo focus:
+  - function call plus loop
+  - call edges in CFG
+  - param/arg/call instructions in IR
+*/
+
+int countdown(int value) {
+    while (value > 0) {
+        value = value - 1;
+    }
+
+    return value;
+}
+
+int main() {
+    return countdown(4);
+}

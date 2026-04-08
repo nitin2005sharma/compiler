@@ -1,4 +1,4 @@
-# Educational Compiler Workbench
+# comipler optimization visuliser
 
 This project is a small educational compiler for a C-like language subset, plus a browser UI for exploring each compiler phase.
 

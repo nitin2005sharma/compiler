@@ -1,0 +1,42 @@
+/*
+  Demo focus:
+  - symbol table
+  - function parameters
+  - liveness analysis
+  - SSA-style versioned IR
+  - function calls in IR
+
+  Best UI tabs:
+  - Symbol Table
+  - Liveness
+  - SSA IR
+  - Annotated AST Graph
+*/
+
+int combine(int left, int right) {
+    int temp;
+    int result;
+
+    temp = left + right;
+    result = temp * 2;
+
+    return result;
+}
+
+int main() {
+    int x;
+    int y;
+    int z;
+
+    x = 3;
+    y = 4;
+    z = combine(x, y);
+
+    if (z > 10) {
+        x = z - 1;
+    } else {
+        x = z + 1;
+    }
+
+    return x;
+}

@@ -62,4 +62,10 @@ See `docs/COMPILER_PHASES.md` for a phase-by-phase explanation of:
 - why each phase is important
 - how the outputs relate to a real compiler
 
+See `docs/PIPELINE_WITH_OPTIMIZATIONS.md` for a step-by-step walkthrough from source code to IR, optimization, and CFG with real examples of:
+- constant folding
+- constant propagation
+- dead code elimination
+- basic loop optimization
+
 See `docs/EXAMPLES.md` for ready-to-run sample programs and what to inspect in their IR and CFG output.

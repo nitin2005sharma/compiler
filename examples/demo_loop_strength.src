@@ -1,0 +1,27 @@
+/*
+  Demo focus:
+  - strength reduction
+  - induction-variable optimization
+  - CFG loop headers, backedges, and preheaders
+
+  Watch for:
+  - i * 8 replaced by a maintained temporary
+  - the maintained temporary updated with + 8 each loop
+*/
+
+int main() {
+    int i;
+    int acc;
+    int scaled;
+
+    i = 0;
+    acc = 0;
+
+    while (i < 8) {
+        scaled = i * 8;
+        acc = acc + scaled;
+        i = i + 1;
+    }
+
+    return acc;
+}

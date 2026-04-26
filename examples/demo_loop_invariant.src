@@ -1,0 +1,30 @@
+/*
+  Demo focus:
+  - loop-invariant code motion
+  - loop preheader creation
+  - why moving repeated work before a loop helps
+
+  Watch for:
+  - base + step hoisted out of the while body
+*/
+
+int main() {
+    int i;
+    int acc;
+    int base;
+    int step;
+    int limit;
+
+    i = 0;
+    acc = 0;
+    base = 4;
+    step = 6;
+    limit = 5;
+
+    while (i < limit) {
+        acc = acc + (base + step);
+        i = i + 1;
+    }
+
+    return acc;
+}

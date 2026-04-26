@@ -317,6 +317,51 @@ select {
     overflow: hidden;
 }
 
+.graph-panel {
+    display: none;
+    min-height: 260px;
+}
+
+.graph-panel.active {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.graph-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.graph-meta {
+    font-size: 0.88rem;
+    color: rgba(248, 239, 228, 0.8);
+}
+
+.graph-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.graph-actions button {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.graph-actions button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
 .output-view {
     margin: 0;
     padding: 18px;
@@ -329,11 +374,95 @@ select {
     font-family: Consolas, "Cascadia Code", monospace;
 }
 
+.rich-output {
+    white-space: normal;
+    font-family: "Trebuchet MS", "Segoe UI Variable", sans-serif;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.metric-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.metric-card span,
+.metric-card small {
+    display: block;
+    color: rgba(248, 239, 228, 0.78);
+}
+
+.metric-card strong {
+    display: block;
+    margin: 8px 0;
+    color: #fff4e8;
+    font-size: 1.3rem;
+}
+
+.pass-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.pass-list div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 0;
+}
+
+.ir-diff {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-family: Consolas, "Cascadia Code", monospace;
+    font-size: 0.86rem;
+}
+
+.ir-diff th,
+.ir-diff td {
+    width: 50%;
+    padding: 8px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.ir-diff th {
+    text-align: left;
+    color: #ffd4b4;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ir-diff tr.added td:last-child {
+    background: rgba(47, 143, 91, 0.22);
+}
+
+.ir-diff tr.removed td:first-child {
+    background: rgba(179, 63, 63, 0.22);
+}
+
+.empty-note {
+    margin: 0;
+    color: rgba(248, 239, 228, 0.82);
+}
+
 .graph-view {
     display: none;
     min-height: 260px;
+    height: min(72vh, 880px);
     padding: 18px;
     overflow: auto;
+    overscroll-behavior: contain;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)),
         repeating-linear-gradient(
@@ -349,12 +478,27 @@ select {
     display: block;
 }
 
+.graph-stage {
+    min-width: fit-content;
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+.graph-canvas {
+    transform-origin: top center;
+    transition: transform 0.16s ease;
+}
+
 .graph-view svg {
-    width: 100%;
+    display: block;
+    width: auto;
     height: auto;
+    max-width: none;
     background: #fff9f2;
     border-radius: 16px;
     padding: 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
 }
 
 .graph-empty {
@@ -382,6 +526,15 @@ select {
 
     .panel-header {
         flex-direction: column;
+    }
+
+    .graph-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .graph-actions {
+        justify-content: flex-start;
     }
 
     .summary-grid {

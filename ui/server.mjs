@@ -12,6 +12,25 @@ const publicDir = path.join(__dirname, "public");
 const examplesDir = path.join(repoDir, "examples");
 const defaultPort = Number(process.env.PORT || 4318);
 
+function commandExists(command, args = ["-V"]) {
+    return new Promise((resolve) => {
+        const child = spawn(command, args, {
+            windowsHide: true,
+        });
+
+        let settled = false;
+        const finish = (result) => {
+            if (!settled) {
+                settled = true;
+                resolve(result);
+            }
+        };
+
+        child.on("error", () => finish(false));
+        child.on("close", () => finish(true));
+    });
+}
+
 async function findDotExecutable() {
     if (process.env.DOT_PATH && await fileExists(process.env.DOT_PATH)) {
         return process.env.DOT_PATH;
@@ -26,6 +45,10 @@ async function findDotExecutable() {
         if (await fileExists(candidate)) {
             return candidate;
         }
+    }
+
+    if (await commandExists("dot")) {
+        return "dot";
     }
 
     return "";
@@ -161,8 +184,8 @@ async function compileSource(source, traceEnabled = true) {
             stderr: "Compiler executable not found. Build the C++ project first.",
             compilerPath: "",
             graphvizPath,
-            files: { ir: "", astDot: "", annotatedAstDot: "", cfgDot: "" },
-            visuals: { astSvg: "", annotatedAstSvg: "", cfgSvg: "" },
+            files: { summary: "", optReport: "", ssaIr: "", symbols: "", liveness: "", cfgAnalysis: "", preOptIr: "", ir: "", astDot: "", annotatedAstDot: "", cfgBeforeOptDot: "", cfgDot: "", cfgAnalysisDot: "" },
+            visuals: { astSvg: "", annotatedAstSvg: "", cfgBeforeOptSvg: "", cfgSvg: "", cfgAnalysisSvg: "" },
             trace: { phases: [], byPhase: {}, plainOutput: "" },
         };
     }
@@ -182,17 +205,37 @@ async function compileSource(source, traceEnabled = true) {
 
         const result = await runCompiler(compilerPath, args, repoDir);
         const trace = parseTraceOutput(result.stdout);
+        const preOptIrPath = outputPrefix + "_pre_opt_ir.txt";
+        const summaryPath = outputPrefix + "_summary.txt";
+        const optReportPath = outputPrefix + "_opt_report.txt";
+        const ssaIrPath = outputPrefix + "_ssa_ir.txt";
+        const symbolsPath = outputPrefix + "_symbols.txt";
+        const livenessPath = outputPrefix + "_liveness.txt";
+        const cfgAnalysisPath = outputPrefix + "_cfg_analysis.txt";
         const astDotPath = outputPrefix + "_ast.dot";
         const annotatedAstDotPath = outputPrefix + "_annotated_ast.dot";
+        const cfgBeforeOptDotPath = outputPrefix + "_pre_opt_cfg.dot";
         const cfgDotPath = outputPrefix + "_cfg.dot";
+        const cfgAnalysisDotPath = outputPrefix + "_cfg_analysis.dot";
+        const preOptIr = await maybeRead(preOptIrPath);
+        const summary = await maybeRead(summaryPath);
+        const optReport = await maybeRead(optReportPath);
+        const ssaIr = await maybeRead(ssaIrPath);
+        const symbols = await maybeRead(symbolsPath);
+        const liveness = await maybeRead(livenessPath);
+        const cfgAnalysis = await maybeRead(cfgAnalysisPath);
         const astDot = await maybeRead(astDotPath);
         const annotatedAstDot = await maybeRead(annotatedAstDotPath);
+        const cfgBeforeOptDot = await maybeRead(cfgBeforeOptDotPath);
         const cfgDot = await maybeRead(cfgDotPath);
+        const cfgAnalysisDot = await maybeRead(cfgAnalysisDotPath);
 
         const visuals = {
             astSvg: "",
             annotatedAstSvg: "",
+            cfgBeforeOptSvg: "",
             cfgSvg: "",
+            cfgAnalysisSvg: "",
         };
 
         if (graphvizPath && astDot) {
@@ -209,10 +252,24 @@ async function compileSource(source, traceEnabled = true) {
             }
         }
 
+        if (graphvizPath && cfgBeforeOptDot) {
+            const cfgBeforeOptSvgResult = await runCompiler(graphvizPath, ["-Tsvg", cfgBeforeOptDotPath], repoDir);
+            if (cfgBeforeOptSvgResult.code === 0) {
+                visuals.cfgBeforeOptSvg = cfgBeforeOptSvgResult.stdout;
+            }
+        }
+
         if (graphvizPath && cfgDot) {
             const cfgSvgResult = await runCompiler(graphvizPath, ["-Tsvg", cfgDotPath], repoDir);
             if (cfgSvgResult.code === 0) {
                 visuals.cfgSvg = cfgSvgResult.stdout;
+            }
+        }
+
+        if (graphvizPath && cfgAnalysisDot) {
+            const cfgAnalysisSvgResult = await runCompiler(graphvizPath, ["-Tsvg", cfgAnalysisDotPath], repoDir);
+            if (cfgAnalysisSvgResult.code === 0) {
+                visuals.cfgAnalysisSvg = cfgAnalysisSvgResult.stdout;
             }
         }
 
@@ -224,10 +281,19 @@ async function compileSource(source, traceEnabled = true) {
             compilerPath,
             graphvizPath,
             files: {
+                summary,
+                optReport,
+                ssaIr,
+                symbols,
+                liveness,
+                cfgAnalysis,
+                preOptIr,
                 ir: await maybeRead(outputPrefix + "_ir.txt"),
                 astDot,
                 annotatedAstDot,
+                cfgBeforeOptDot,
                 cfgDot,
+                cfgAnalysisDot,
             },
             visuals,
             trace,

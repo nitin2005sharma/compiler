@@ -10,6 +10,7 @@ This folder contains the main reference material for the compiler and UI.
 4. [EXAMPLES.md](EXAMPLES.md)
 5. [COMPILER_PHASES.md](COMPILER_PHASES.md)
 6. [FORMAT.md](FORMAT.md)
+7. [../benchmarks/BENCHMARK_REPORT.md](../benchmarks/BENCHMARK_REPORT.md)
 
 ## Document Guide
 
@@ -33,6 +34,10 @@ Phase-by-phase explanation of lexer, parser, semantic analysis, IR generation, C
 
 Reference for the three-address IR and control-flow graph structure.
 
+### [../benchmarks/BENCHMARK_REPORT.md](../benchmarks/BENCHMARK_REPORT.md)
+
+Measured optimization results across the benchmark suite, including IR reduction, CFG reduction, and per-program comparisons.
+
 ## Quick Start
 
 Build the compiler:
@@ -55,4 +60,3 @@ node .\ui\server.mjs
 ```
 
 Then open `http://127.0.0.1:4318`.
-

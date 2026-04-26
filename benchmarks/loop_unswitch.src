@@ -1,0 +1,23 @@
+int worker(int flag) {
+    int i;
+    int acc;
+
+    i = 0;
+    acc = 0;
+
+    while (i < 4) {
+        if (flag) {
+            acc = acc + 2;
+        } else {
+            acc = acc + 3;
+        }
+
+        i = i + 1;
+    }
+
+    return acc;
+}
+
+int main() {
+    return worker(1);
+}

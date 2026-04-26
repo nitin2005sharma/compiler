@@ -1,0 +1,18 @@
+digraph CFG{graph[compound=true,ranksep=0.65,nodesep=0.5];
+node[shape=box,fontname="Consolas"];
+edge[fontname="Consolas"];
+subgraph cluster_main{
+label="Function main";
+color="#7aa6c2";
+style="rounded";
+Entry_main[shape=oval,style="filled",fillcolor="#d8f3dc",label="Entry\nmain"];
+B0[style="rounded,filled",fillcolor="#eaf4ff",label="B0\l0: main:\l"];
+B1[style="rounded,filled",fillcolor="#eaf4ff",label="B1\l1: L0:\l"];
+B2[style="rounded,filled",fillcolor="#eaf4ff",label="B2\l2: L1:\l3: ret 5\l"];
+Exit_main[shape=oval,style="filled",fillcolor="#f8d7da",label="Exit\nmain"];
+}
+Entry_main -> B0[label="entry",color="#2a9d8f",penwidth=1.4];
+B2 -> Exit_main[label="ret",color="#e76f51",penwidth=1.4];
+B0 -> B1[label="next"];
+B1 -> B2[label="next"];
+}

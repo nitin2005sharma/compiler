@@ -5,6 +5,8 @@
 #include <utility>
 #include <vector>
 
+#include "diagnostics.hpp"
+
 struct ASTNode;
 
 struct SemanticAnnotation {
@@ -17,6 +19,7 @@ struct SemanticAnnotation {
 
 struct ASTNode {
     SemanticAnnotation semantic;
+    SourceRange source_range;
 
     virtual ~ASTNode() {}
     virtual std::string to_dot_node(std::string& out, int& id) = 0;

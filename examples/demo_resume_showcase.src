@@ -1,0 +1,42 @@
+/*
+  Demo focus:
+  - multiple optimization passes in one program
+  - readable before/after IR diff
+  - benchmark-style summary counters
+  - loop analysis in CFG/Dominator View
+
+  This is the best single file to open during a resume/project demo.
+*/
+
+int score_loop(int flag, int limit) {
+    int i;
+    int acc;
+    int scaled;
+    int base;
+    int step;
+    int dead;
+
+    i = 0;
+    acc = 0;
+    base = 2 + 3;
+    step = 10 - 4;
+
+    while (i < limit) {
+        dead = acc + 999;
+        scaled = i * 4;
+
+        if (flag) {
+            acc = acc + (base + step);
+        } else {
+            acc = acc + scaled;
+        }
+
+        i = i + 1;
+    }
+
+    return acc;
+}
+
+int main() {
+    return score_loop(1, 6);
+}

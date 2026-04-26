@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "ast.hpp"
+#include "diagnostics.hpp"
 #include "lexer.hpp"
 #include "trace.hpp"
 
@@ -19,7 +20,7 @@ class Parser {
         if (!toks.empty()) {
             return toks.back();
         }
-        return Token{TokenType::END, "", 0, 0};
+        return Token{TokenType::END, "", 0, 1, 1};
     }
 
     Token consume() {
@@ -30,7 +31,7 @@ class Parser {
             pos = toks.size();
             return toks.back();
         }
-        return Token{TokenType::END, "", 0, 0};
+        return Token{TokenType::END, "", 0, 1, 1};
     }
 
     bool accept(TokenType t) {

@@ -7,7 +7,7 @@ The browser workbench lets you:
 - load sample programs from `examples/`
 - edit source code in the browser
 - run the compiler without leaving the page
-- inspect trace output, diagnostics, IR, AST, annotated AST, and CFG results
+- inspect trace output, source-aware diagnostics, optimization explanations, IR diffs, SSA-style IR, symbol tables, liveness, AST, annotated AST, and CFG results
 
 The UI is served by `ui/server.mjs`.
 
@@ -90,13 +90,27 @@ Displays grouped trace messages like `LEXER`, `PARSER`, `SEMANTIC`, `IR`, and `C
 The output panel includes tabs for:
 
 - diagnostics
+- optimization dashboard
+- summary.txt
+- optimization explanations
+- final optimized code
+- IR diff
 - AST graph
 - annotated AST graph
-- CFG graph
-- IR text
+- IR before optimization
+- CFG before optimization
+- optimized IR
+- optimized CFG
+- CFG/dominator view
+- CFG metadata
+- SSA IR
+- symbol table
+- liveness
 - AST DOT
 - annotated AST DOT
-- CFG DOT
+- CFG DOT before optimization
+- optimized CFG DOT
+- CFG analysis DOT
 - plain stdout that is not trace output
 
 ## Troubleshooting
@@ -158,4 +172,3 @@ Accepts JSON:
 ```
 
 Returns compile status, trace output, text files, and rendered graph SVG when available.
-

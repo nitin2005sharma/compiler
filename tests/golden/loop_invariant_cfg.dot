@@ -1,0 +1,23 @@
+digraph CFG{graph[compound=true,ranksep=0.65,nodesep=0.5];
+node[shape=box,fontname="Consolas"];
+edge[fontname="Consolas"];
+subgraph cluster_main{
+label="Function main";
+color="#7aa6c2";
+style="rounded";
+Entry_main[shape=oval,style="filled",fillcolor="#d8f3dc",label="Entry\nmain"];
+B0[style="rounded,filled",fillcolor="#eaf4ff",label="B0\l0: main:\l1: i = 0\l2: acc = 0\l3: limit = 5\l"];
+B1[style="rounded,filled",fillcolor="#eaf4ff",label="B1\l4: L2:\l5: t1 = 10\l"];
+B2[style="rounded,filled",fillcolor="#eaf4ff",label="B2\l6: L0:\l7: t0 = i < limit\l8: ifFalse t0 goto L1\l"];
+B3[style="rounded,filled",fillcolor="#eaf4ff",label="B3\l9: t2 = acc + t1\l10: acc = t2\l11: t3 = i + 1\l12: i = t3\l13: goto L0\l"];
+B4[style="rounded,filled",fillcolor="#eaf4ff",label="B4\l14: L1:\l15: ret acc\l"];
+Exit_main[shape=oval,style="filled",fillcolor="#f8d7da",label="Exit\nmain"];
+}
+Entry_main -> B0[label="entry",color="#2a9d8f",penwidth=1.4];
+B4 -> Exit_main[label="ret",color="#e76f51",penwidth=1.4];
+B0 -> B1[label="next"];
+B1 -> B2[label="next"];
+B2 -> B4[label="false"];
+B2 -> B3[label="true"];
+B3 -> B2[label="goto"];
+}

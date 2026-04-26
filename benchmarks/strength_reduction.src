@@ -1,0 +1,16 @@
+int main() {
+    int i;
+    int acc;
+    int scaled;
+
+    i = 0;
+    acc = 0;
+
+    while (i < 6) {
+        scaled = i * 4;
+        acc = acc + scaled;
+        i = i + 1;
+    }
+
+    return acc;
+}

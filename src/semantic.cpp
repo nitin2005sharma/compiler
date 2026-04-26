@@ -3,6 +3,18 @@
 #include <sstream>
 #include <stdexcept>
 
+namespace {
+
+[[noreturn]] void throw_semantic_error(const ASTNode* node, const std::string& message) {
+    throw CompileError(
+        "Semantic",
+        message,
+        node != nullptr ? node->source_range : SourceRange{1, 1, 1}
+    );
+}
+
+}  // namespace
+
 void SemanticAnalyzer::log(const std::string& message) const {
     if (trace != nullptr) {
         trace->log("SEMANTIC", message);
@@ -35,12 +47,12 @@ void SemanticAnalyzer::declare(const std::string& name, ASTNode* decl, const std
     }
 
     if (functions.count(name)) {
-        throw std::runtime_error("Variable name conflicts with function: " + name);
+        throw_semantic_error(decl, "variable name conflicts with function '" + name + "'");
     }
 
     auto& current = scopes.back().vars;
     if (current.count(name)) {
-        throw std::runtime_error("Duplicate declaration: " + name);
+        throw_semantic_error(decl, "duplicate declaration of '" + name + "'");
     }
 
     VarInfo info;
@@ -56,6 +68,12 @@ void SemanticAnalyzer::declare(const std::string& name, ASTNode* decl, const std
     decl->semantic.declaration = decl;
 
     log("declared " + kind + " " + name + " at depth " + std::to_string(info.scope_depth));
+
+    std::ostringstream line;
+    line << kind << " " << name << " : " << info.type_name
+         << " @ scope depth " << info.scope_depth
+         << " (line " << decl->source_range.line << ", column " << decl->source_range.column << ")";
+    report_lines.push_back(line.str());
 }
 
 std::string SemanticAnalyzer::make_function_signature(const FuncDecl* func) const {
@@ -74,6 +92,7 @@ std::string SemanticAnalyzer::make_function_signature(const FuncDecl* func) cons
 void SemanticAnalyzer::analyze(ASTProgram* prog) {
     scopes.clear();
     functions.clear();
+    report_lines.clear();
     enter();
 
     prog->semantic.symbol_kind = "program";
@@ -93,10 +112,10 @@ void SemanticAnalyzer::analyze(ASTProgram* prog) {
         }
 
         if (!scopes.empty() && scopes.front().vars.count(f->name)) {
-            throw std::runtime_error("Function name conflicts with variable: " + f->name);
+            throw_semantic_error(f, "function name conflicts with variable '" + f->name + "'");
         }
         if (functions.count(f->name)) {
-            throw std::runtime_error("Duplicate function: " + f->name);
+            throw_semantic_error(f, "duplicate function '" + f->name + "'");
         }
 
         FunctionInfo info;
@@ -112,13 +131,18 @@ void SemanticAnalyzer::analyze(ASTProgram* prog) {
         f->semantic.declaration = f;
 
         log("registered function " + f->name + " with signature " + info.signature);
+        std::ostringstream line;
+        line << "function " << f->name << " : " << info.signature
+             << " @ scope depth 0"
+             << " (line " << f->source_range.line << ", column " << f->source_range.column << ")";
+        report_lines.push_back(line.str());
         if (f->name == "main") {
             has_main = true;
         }
     }
 
     if (!has_main) {
-        throw std::runtime_error("Missing main function");
+        throw CompileError("Semantic", "missing main function", SourceRange{1, 1, 1});
     }
 
     for (auto* d : prog->decls) {
@@ -127,6 +151,21 @@ void SemanticAnalyzer::analyze(ASTProgram* prog) {
 
     leave();
     log("semantic analysis complete");
+}
+
+std::string SemanticAnalyzer::symbol_report() const {
+    std::ostringstream os;
+    os << "Symbol Table\n";
+    os << "============\n";
+    if (report_lines.empty()) {
+        os << "No symbols recorded.\n";
+        return os.str();
+    }
+
+    for (const auto& line : report_lines) {
+        os << "- " << line << "\n";
+    }
+    return os.str();
 }
 
 void SemanticAnalyzer::analyze_node(ASTNode* n) {
@@ -197,7 +236,7 @@ void SemanticAnalyzer::analyze_stmt(ASTStmt* s) {
     if (auto* as = dynamic_cast<AssignStmt*>(s)) {
         const VarInfo* target = resolve_var(as->name);
         if (target == nullptr) {
-            throw std::runtime_error("Undeclared variable: " + as->name);
+            throw_semantic_error(as, "undeclared variable '" + as->name + "'");
         }
         as->semantic.symbol_kind = "write";
         as->semantic.type_name = target->type_name;
@@ -215,7 +254,7 @@ void SemanticAnalyzer::analyze_stmt(ASTStmt* s) {
         return;
     }
 
-    throw std::runtime_error("Unknown statement in semantic analysis");
+    throw_semantic_error(s, "unknown statement in semantic analysis");
 }
 
 void SemanticAnalyzer::analyze_expr(ASTExpr* e) {
@@ -228,7 +267,7 @@ void SemanticAnalyzer::analyze_expr(ASTExpr* e) {
     if (auto* id = dynamic_cast<Ident*>(e)) {
         const VarInfo* resolved = resolve_var(id->name);
         if (resolved == nullptr) {
-            throw std::runtime_error("Undeclared variable: " + id->name);
+            throw_semantic_error(id, "undeclared variable '" + id->name + "'");
         }
         id->semantic.symbol_kind = "use";
         id->semantic.type_name = resolved->type_name;
@@ -249,13 +288,13 @@ void SemanticAnalyzer::analyze_expr(ASTExpr* e) {
     if (auto* call = dynamic_cast<CallExpr*>(e)) {
         auto it = functions.find(call->callee);
         if (it == functions.end()) {
-            throw std::runtime_error("Undefined function: " + call->callee);
+            throw_semantic_error(call, "undefined function '" + call->callee + "'");
         }
         if (it->second.arity != call->args.size()) {
             std::ostringstream os;
-            os << "Function " << call->callee << " expects " << it->second.arity
+            os << "function '" << call->callee << "' expects " << it->second.arity
                << " arguments but got " << call->args.size();
-            throw std::runtime_error(os.str());
+            throw_semantic_error(call, os.str());
         }
 
         call->semantic.symbol_kind = "call";
@@ -271,5 +310,5 @@ void SemanticAnalyzer::analyze_expr(ASTExpr* e) {
         return;
     }
 
-    throw std::runtime_error("Unknown expression in semantic analysis");
+    throw_semantic_error(e, "unknown expression in semantic analysis");
 }

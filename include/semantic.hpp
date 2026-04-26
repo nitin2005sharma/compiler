@@ -29,6 +29,7 @@ class SemanticAnalyzer {
 
     std::vector<Scope> scopes;
     std::unordered_map<std::string, FunctionInfo> functions;
+    std::vector<std::string> report_lines;
     TraceLogger* trace;
 
     void log(const std::string& message) const;
@@ -43,6 +44,7 @@ public:
         : trace(trace_logger) {}
 
     void analyze(ASTProgram* prog);
+    std::string symbol_report() const;
 
 private:
     void analyze_node(ASTNode* n);

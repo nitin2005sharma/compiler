@@ -11,7 +11,7 @@
         <header class="hero">
             <div>
                 <p class="eyebrow"></p>
-                <h1> code optimizaion</h1>
+                <h1> code optimization visualizer</h1>
               
             </div>
               
@@ -57,7 +57,18 @@
                 <section class="tab-panel">
                     <div id="tabButtons" class="tab-buttons"></div>
                     <div class="tab-body">
-                        <div id="graphContent" class="graph-view"></div>
+                        <section id="graphPanel" class="graph-panel">
+                            <div class="graph-toolbar">
+                                <div id="graphMeta" class="graph-meta">Run the compiler to view graphs.</div>
+                                <div class="graph-actions">
+                                    <button id="fitGraphButton" type="button">Fit to screen</button>
+                                    <button id="actualSizeButton" type="button">100%</button>
+                                    <button id="zoomOutButton" type="button">-</button>
+                                    <button id="zoomInButton" type="button">+</button>
+                                </div>
+                            </div>
+                            <div id="graphContent" class="graph-view"></div>
+                        </section>
                         <pre id="tabContent" class="output-view"></pre>
                     </div>
                 </section>

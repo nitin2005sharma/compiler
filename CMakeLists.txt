@@ -13,6 +13,7 @@ add_executable(compiler
     src/ast.cpp
     src/semantic.cpp
     src/ir.cpp
+    src/optimizer.cpp
     src/cfg.cpp
 )
 
@@ -66,4 +67,46 @@ if(BUILD_TESTING)
                 "${CMAKE_CURRENT_BINARY_DIR}/compiler_undefined_function"
     )
     set_tests_properties(compiler_undefined_function PROPERTIES WILL_FAIL TRUE)
+
+    add_test(
+        NAME compiler_optimizations
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/check_optimizations.ps1"
+                "$<TARGET_FILE:compiler>"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/optimizations.src"
+                "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+
+    add_test(
+        NAME compiler_diagnostics
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/check_diagnostics.ps1"
+                "$<TARGET_FILE:compiler>"
+                "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+
+    add_test(
+        NAME compiler_golden_outputs
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/check_golden_outputs.ps1"
+                "$<TARGET_FILE:compiler>"
+                "${CMAKE_CURRENT_SOURCE_DIR}"
+                "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+
+    add_test(
+        NAME compiler_random_parser_smoke
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/random_parser_smoke.ps1"
+                "$<TARGET_FILE:compiler>"
+    )
+
+    add_test(
+        NAME compiler_loop_transforms
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/check_loop_transforms.ps1"
+                "$<TARGET_FILE:compiler>"
+                "${CMAKE_CURRENT_SOURCE_DIR}"
+                "${CMAKE_CURRENT_BINARY_DIR}"
+    )
 endif()

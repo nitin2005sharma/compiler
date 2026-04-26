@@ -1,0 +1,13 @@
+int main() {
+    int x;
+    int y;
+
+    x = 2 + 3;
+    y = x + 0;
+
+    while (1 < 0) {
+        y = y + 99;
+    }
+
+    return y;
+}
